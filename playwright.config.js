@@ -1,23 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const config= ({
-  testDir: './tests',  // Directory containing the test files
+export default defineConfig({
+  testDir: './tests',
 
-  timeout: 30 * 1000,  // Timeout for each test (in ms)
+  timeout: 30 * 1000,
 
   expect: {
-    timeout: 5 * 1000,  // Timeout for each expect assertion
+    timeout: 5 * 1000,
   },
 
-  reporter: 'html',  // Use HTML reporter for test results
+  reporter: 'html',
 
   use: {
-    browserName: 'firefox',  // Browser configuration
-    navigationTimeout: 60 * 1000,  // Timeout for page navigation
-    headless: false,  // Run tests in headed mode
-    viewport: null,  // to use the full available screen size by default setting viewport to null
+    browserName: 'chromium',
+    navigationTimeout: 60 * 1000,
+    headless: true, // ✅ REQUIRED for GitHub Actions
+    viewport: null,
   },
 });
-
-
-module.exports = config;
