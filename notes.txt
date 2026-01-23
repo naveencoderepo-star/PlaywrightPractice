@@ -1,0 +1,89 @@
+
+
+
+
+Terminal commands::
+
+
+to run test --  npx playwright test --headed
+to open report - npx playwright show-report
+
+
+------------------------------------------------------
+
+Browser set config:
+
+chrome  - chromium
+firefox - firefox
+safari   - webkit
+
+
+-------------------------------------------------
+
+Playwright user method:
+
+type - sendkeys  deprecated 
+fill - sendkeys (new)
+
+getContent  - to fetch the text from locator or element
+toHaveTitle  - to fetch the title of the page
+toContainText - to check the text is contains in that fetched string or not.
+
+----------------
+
+const { test, expect } = require('@playwright/test');
+
+test.only('Browser Context playwright test', async ({ browser }) => {
+  // to start a new browser session newContext
+  const context = await browser.newContext();
+
+  // to open a new tab in the browser
+  const page = await context.newPage();
+
+  // to navigate to a url
+  await page.goto('https://rahulshettyacademy.com/loginpagePractise/');
+
+  const username = page.locator('#username');
+  const password = page.locator("[type='password']");
+  const signInBtn = page.locator('#signInBtn');
+  const blockAlert = page.locator("[style*='block']");
+  const cardTitles = page.locator('.card-title');
+
+  // to fetch the title of the page
+  console.log(await page.title());
+
+  // to assert the title of the page
+  await expect(page).toHaveTitle('LoginPage Practise | Rahul Shetty Academy');
+
+  // to type in username field
+  await username.fill('rahulshetty');
+
+  // to type in password field
+  await password.fill('Learning@830$3mK2');
+
+  // to click on sign in button
+  await signInBtn.click();
+
+  // to get the context of an element
+  console.log(await blockAlert.textContent());
+
+  // to assert the element contains text
+  await expect(blockAlert).toContainText('Incorrect');
+
+  await username.fill('');
+  await username.fill('rahulshettyacademy');
+  await signInBtn.click();
+
+  console.log(await cardTitles.nth(0).textContent());
+  console.log(await cardTitles.first().textContent());
+  console.log(await cardTitles.last().textContent());
+
+  // to get all the text contents of multiple elements
+
+  const cardTitlesText = await cardTitles.allTextContents();
+
+  console.log(cardTitlesText);
+});
+
+
+// npx playwright test
