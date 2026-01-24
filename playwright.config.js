@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests',
@@ -9,12 +9,21 @@ export default defineConfig({
     timeout: 5 * 1000,
   },
 
-  reporter: 'html',
+  reporter: [['html', { open: 'never' }]],
 
   use: {
     browserName: 'chromium',
-    navigationTimeout: 60 * 1000,
-    headless: true, // ✅ REQUIRED for GitHub Actions
+    headless: false,
     viewport: null,
+    navigationTimeout: 60 * 1000,
+
+    // screenshot: 'only-on-failure',
+    video: 'on',
+    // trace: 'on-first-retry',
+    trace:'on',
+    screenshot: 'on',
   },
-});
+
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+})
