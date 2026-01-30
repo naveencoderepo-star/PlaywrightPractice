@@ -1,33 +1,61 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test';
 
+/* -----------------------------
+   Test 1: More Validation Test
+--------------------------------*/
 test('More validation test', async ({ page }) => {
 
   await page.goto(
     'https://rahulshettyacademy.com/AutomationPractice/',
     { waitUntil: 'domcontentloaded' }
-  )
+  );
 
-  await page.reload({ waitUntil: 'domcontentloaded' })
-//   await page.goBack({ waitUntil: 'domcontentloaded' })
+  // Hide / Show validation
+  await expect(page.locator('#displayed-text')).toBeVisible();
+  await page.getByRole('button', { name: 'Hide' }).click();
+  await expect(page.getByPlaceholder('Hide/Show Example')).toBeHidden();
 
-  await expect(page.locator('#displayed-text')).toBeVisible()
-  await page.getByRole('button', { name: 'Hide' }).click()
-  await expect(page.getByPlaceholder('Hide/Show Example')).toBeHidden()
+  // Alert handling
+  page.on('dialog', dialog => dialog.accept());
+  await page.locator('#confirmbtn').click();
 
-  page.on('dialog', dialog => dialog.accept())
-  await page.locator('#confirmbtn').click()
+  // Mouse hover
+  await page.locator('#mousehover').hover();
+  await page.getByRole('link', { name: 'Top' }).click();
 
-  await page.locator('#mousehover').hover()
-  await page.getByRole('link', { name: 'Top' }).click()
+  // Iframe handling
+  const childpage = page.frameLocator('#courses-iframe');
+  await childpage.locator("a[href*='lifetime-access']").first().click();
 
-  const childpage = page.frameLocator('#courses-iframe')
+  const fetchedText = await childpage.locator('.text h2').textContent();
+  const subscriberCount = fetchedText.split(' ')[1];
 
-  await childpage.locator("a[href*='lifetime-access']").waitFor({ timeout: 15000 })
-  await childpage.locator("a[href*='lifetime-access']").first().click()
+  console.log('Subscriber count:', subscriberCount);
+});
 
-  const fetchedText = await childpage.locator('.text h2').textContent()
-  const subscriberCount = fetchedText.split(' ')[1]
 
-  console.log(subscriberCount)
+/* ------------------------------------------
+   Test 2: Screenshot & Visual Comparison
+-------------------------------------------*/
+test.only('Screenshot & Visual comparison test', async ({ page }) => {
 
-})
+  await page.goto(
+    'https://rahulshettyacademy.com/AutomationPractice/',
+    { waitUntil: 'domcontentloaded' }
+  );
+
+  const displayedText = page.locator('#displayed-text');
+
+  // Wait for element to exist in DOM
+  await displayedText.waitFor({ state: 'attached', timeout: 10000 });
+
+  // Force visibility if needed
+  if (!(await displayedText.isVisible())) {
+    await page.getByRole('button', { name: 'Show' }).click();
+  }
+
+  await expect(displayedText).toBeVisible({ timeout: 10000 });
+
+  // Take screenshot safely
+  await displayedText.screenshot({ path: 'partialLocator.png' });
+});
