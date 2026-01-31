@@ -7,13 +7,16 @@ class LoginPage {
   }
 
   async goTo() {
-    await this.page.goto('https://rahulshettyacademy.com/client')
+    await this.page.goto('https://rahulshettyacademy.com/client', {
+      waitUntil: 'networkidle',
+    })
   }
 
   async validLogin(email, password) {
     await this.userEmail.fill(email)
     await this.userPassword.fill(password)
     await this.loginButton.click()
+    await this.page.waitForLoadState('networkidle')
   }
 }
 

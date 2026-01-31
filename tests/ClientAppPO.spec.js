@@ -1,107 +1,36 @@
-// const { test, expect } = require('@playwright/test')
-// const { LoginPage } = require('../pageobject/LoginPage')
+const { test } = require('@playwright/test')
+const { LoginPage } = require('../pageobject/LoginPage')
+const { DashboardPage } = require('../pageobject/DashboardPage')
+const { CartPage } = require('../pageobject/CartPage')
+const { CheckoutPage } = require('../pageobject/CheckoutPage')
+const { OrdersPage } = require('../pageobject/OrdersPage')
 
-// test('@Webst Client App login', async ({ page }) => {
-//   const email = 'anshika@gmail.com'
-//   const password = 'Iamking@000'
-//   const productName = 'ZARA COAT 3'
-
-//   const products = page.locator('.card-body')
-
-//   // ✅ Correct POM object creation
-//   const loginPage = new LoginPage(page)
-
-//   await loginPage.goTo()
-//   await loginPage.validLogin(email, password)
-
-//   await page.waitForLoadState('networkidle')
-
-//   await page.locator('.card-body b').first().waitFor()
-//   const titles = await page.locator('.card-body b').allTextContents()
-//   console.log(titles)
-
-//   const count = await products.count()
-
-//   for (let i = 0; i < count; i++) {
-//     const productText = await products.nth(i).locator('b').textContent()
-
-//     if (productText === productName) {
-//       await products.nth(i).locator('text= Add To Cart').click()
-//       break
-//     }
-//   }
-
-//   await page.locator("[routerlink*='cart']").click()
-//   await page.locator('div li').first().waitFor()
-
-//   await expect(
-//     page.locator("h3:has-text('ZARA COAT 3')")
-//   ).toBeVisible()
-
-//   await page.locator('text=Checkout').click()
-
-//   await page
-//     .locator("[placeholder*='Country']")
-//     .pressSequentially('ind', { delay: 150 })
-
-//   const dropdown = page.locator('.ta-results')
-//   await dropdown.waitFor()
-
-//   const optionsCount = await dropdown.locator('button').count()
-
-//   for (let i = 0; i < optionsCount; i++) {
-//     const text = await dropdown.locator('button').nth(i).textContent()
-
-//     if (text.trim() === 'India') {
-//       await dropdown.locator('button').nth(i).click()
-//       break
-//     }
-//   }
-
-//   await expect(
-//     page.locator(".user__name [type='text']").first()
-//   ).toHaveText(email)
-
-//   await page.locator('.action__submit').click()
-
-//   await expect(page.locator('.hero-primary')).toHaveText(
-//     ' Thankyou for the order. '
-//   )
-
-//   const orderId = await page
-//     .locator('.em-spacer-1 .ng-star-inserted')
-//     .textContent()
-
-//   console.log('Order ID:', orderId)
-
-//   await page.locator("button[routerlink*='myorders']").click()
-//   await page.locator('tbody').waitFor()
-
-//   const rows = page.locator('tbody tr')
-
-//   for (let i = 0; i < (await rows.count()); i++) {
-//     const rowOrderId = await rows.nth(i).locator('th').textContent()
-
-//     if (orderId.includes(rowOrderId)) {
-//       await rows.nth(i).locator('button').first().click()
-//       break
-//     }
-//   }
-
-//   const orderIdDetails = await page.locator('.col-text').textContent()
-//   expect(orderId.includes(orderIdDetails)).toBeTruthy()
-// })
-
-
-const { test, expect } = require('@playwright/test')
-const { LoginPage } = require('../pageobjects/LoginPage')
-
-test('@Webst Client App login', async ({ page }) => {
+test('@Webst Client App – place order flow', async ({ page }) => {
   const email = 'anshika@gmail.com'
   const password = 'Iamking@000'
+  const productName = 'ZARA COAT 3'
 
   const loginPage = new LoginPage(page)
+  const dashboardPage = new DashboardPage(page)
+  const cartPage = new CartPage(page)
+  const checkoutPage = new CheckoutPage(page)
+  const ordersPage = new OrdersPage(page)
 
   await loginPage.goTo()
   await loginPage.validLogin(email, password)
+
+  await dashboardPage.addProductToCart(productName)
+  await dashboardPage.goToCart()
+
+  await cartPage.verifyProductInCart(productName)
+  await cartPage.checkout()
+
+  await checkoutPage.selectCountry('ind')
+  await checkoutPage.verifyEmail(email)
+  const orderId = await checkoutPage.placeOrder()
+
+  console.log('Order ID:', orderId)
+
+  await ordersPage.openOrder(orderId)
+  await ordersPage.verifyOrderDetails(orderId)
 })
