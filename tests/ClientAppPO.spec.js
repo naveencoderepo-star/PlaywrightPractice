@@ -1,5 +1,7 @@
 const { test } = require('@playwright/test')
 
+const {customTest} = require('../utlis/test-base')
+
 const { LoginPage } = require('../pageobject/LoginPage')
 const { DashboardPage } = require('../pageobject/DashboardPage')
 const { CartPage } = require('../pageobject/CartPage')
@@ -37,5 +39,25 @@ test.describe('Place Order – Data Driven', () => {
       await ordersPage.openOrder(orderId)
       await ordersPage.verifyOrderDetails(orderId)
     })
+
+
+
+
+
+
   }
+
+  customTest.only('@Webst Client App Fixture', async ({ page, testDataForOrder }) => {
+    const loginPage = new LoginPage(page)
+    const dashboardPage = new DashboardPage(page)
+    const cartPage = new CartPage(page)
+    const checkoutPage = new CheckoutPage(page)
+    const ordersPage = new OrdersPage(page)
+
+    await loginPage.goTo()
+    await loginPage.validLogin(testDataForOrder.email, testDataForOrder.password)
+
+    await dashboardPage.addProductToCart(testDataForOrder.productName)
+    await dashboardPage.goToCart()
+  })
 })
