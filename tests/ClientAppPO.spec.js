@@ -47,7 +47,7 @@ test.describe('Place Order – Data Driven', () => {
 
   }
 
-  customTest.only('@Webst Client App Fixture', async ({ page, testDataForOrder }) => {
+  customTest('@Webst Client App Fixture', async ({ page, testDataForOrder }) => {
     const loginPage = new LoginPage(page)
     const dashboardPage = new DashboardPage(page)
     const cartPage = new CartPage(page)
