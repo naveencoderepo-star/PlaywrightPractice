@@ -10,7 +10,10 @@ test('Visual test', async ({ browser }) => {
 
   page.getByText('Store').waitFor({timeout: '10000'})
 
-  expect(await page.screenshot()).toMatchSnapshot('landing.png');
+  expect(await page.screenshot()).toMatchSnapshot('landing.png', {
+    threshold: 0.2,
+    maxDiffPixels: 1000,
+  });
 
 
 

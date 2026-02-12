@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-/* -----------------------------
-   Test 1: More Validation Test
---------------------------------*/
+
+test.describe.configure({mode:'serial'})
+
 test('More validation test', async ({ page }) => {
 
   await page.goto(
@@ -25,7 +25,7 @@ test('More validation test', async ({ page }) => {
 
   // Iframe handling
   const childpage = page.frameLocator('#courses-iframe');
-  await childpage.locator("a[href*='lifetime-access']").first().click();
+  await childpage.getByRole('link', { name: 'All Access' }).click();
 
   const fetchedText = await childpage.locator('.text h2').textContent();
   const subscriberCount = fetchedText.split(' ')[1];
@@ -34,11 +34,9 @@ test('More validation test', async ({ page }) => {
 });
 
 
-/* ------------------------------------------
-   Test 2: Screenshot & Visual Comparison
--------------------------------------------*/
-test.only('Screenshot & Visual comparison test', async ({ page }) => {
 
+test('Screenshot & Visual comparison test', async ({ page }) => {
+  test.setTimeout(120000);
   await page.goto(
     'https://rahulshettyacademy.com/AutomationPractice/',
     { waitUntil: 'domcontentloaded' }

@@ -1,6 +1,6 @@
 const { test } = require('@playwright/test')
 
-const {customTest} = require('../utlis/test-base')
+const {customTest} = require('../utils/test-base')
 
 const { LoginPage } = require('../pageobject/LoginPage')
 const { DashboardPage } = require('../pageobject/DashboardPage')
@@ -8,7 +8,7 @@ const { CartPage } = require('../pageobject/CartPage')
 const { CheckoutPage } = require('../pageobject/CheckoutPage')
 const { OrdersPage } = require('../pageobject/OrdersPage')
 
-const dataset = require('../utlis/placeOrderTestData.json')
+const dataset = require('../utils/placeOrderTestData.json')
 
 test.describe('Place Order – Data Driven', () => {
   for (const data of dataset) {
@@ -17,6 +17,7 @@ test.describe('Place Order – Data Driven', () => {
 
       const loginPage = new LoginPage(page)
       const dashboardPage = new DashboardPage(page)
+      console.log(page.viewportSize());  
       const cartPage = new CartPage(page)
       const checkoutPage = new CheckoutPage(page)
       const ordersPage = new OrdersPage(page)
@@ -58,6 +59,7 @@ test.describe('Place Order – Data Driven', () => {
     await loginPage.validLogin(testDataForOrder.email, testDataForOrder.password)
 
     await dashboardPage.addProductToCart(testDataForOrder.productName)
+    await page.waitForTimeout(5000);
     await dashboardPage.goToCart()
   })
 })

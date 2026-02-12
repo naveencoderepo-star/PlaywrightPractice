@@ -6,7 +6,7 @@ test("getBy locator types", async ({browser}) => {
  const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('https://rahulshettyacademy.com/angularpractice/')
-await page.pause();
+// await page.pause();
 
 
 await page.fill('input[name="name"]','Test user')
