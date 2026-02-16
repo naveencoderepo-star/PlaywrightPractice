@@ -5,11 +5,13 @@ export default defineConfig({
 
   timeout: 30 * 1000,
 
+  retries: 1,
+
   expect: {
     timeout: 5 * 1000,
   },
 
-  reporter: [['html', { open: 'never' }]],
+  reporter: [['html', { open: 'always' }]],
 
   use: {
     browserName: 'chromium',

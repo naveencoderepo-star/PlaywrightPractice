@@ -13,7 +13,7 @@ const dataset = require('../utils/placeOrderTestData.json')
 test.describe('Place Order – Data Driven', () => {
   for (const data of dataset) {
 
-    test(`@Webst Client App ${data.productName}`, async ({ page }) => {
+    test(`@Web Client App ${data.productName}`, async ({ page }) => {
 
       const loginPage = new LoginPage(page)
       const dashboardPage = new DashboardPage(page)

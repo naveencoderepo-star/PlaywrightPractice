@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 
-test('Internet speed test', async ({ page }) => {
+test('@Web Internet speed test', async ({ page }) => {
     test.setTimeout(180000);
 
     await page.goto('https://fast.com', { waitUntil: 'domcontentloaded' });
