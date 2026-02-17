@@ -15,7 +15,7 @@ export default defineConfig({
 
   use: {
     browserName: 'chromium',
-    headless: false,
+    headless: !!process.env.CI,
     viewport: null,
     navigationTimeout: 60 * 1000,
 

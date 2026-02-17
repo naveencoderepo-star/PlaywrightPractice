@@ -22,7 +22,7 @@ export default defineConfig({
   use: {
     browserName: 'chromium',
     channel: 'msedge',
-    headless: false,
+    headless: !!process.env.CI,
     viewport: null,
     navigationTimeout: 60 * 1000,
     video: 'only-on-failure',
@@ -41,7 +41,7 @@ export default defineConfig({
   use: {
     browserName: 'chromium',
     channel: 'chrome',
-    headless: false,
+    headless: !!process.env.CI,
     viewport: null,
     navigationTimeout: 60 * 1000,
     video: 'only-on-failure',
@@ -64,7 +64,7 @@ export default defineConfig({
   name: 'Safari',
   use: {
     browserName: 'webkit',
-    headless: false,
+    headless: !!process.env.CI,
     // viewport: null,
     navigationTimeout: 60 * 1000,
     video: 'on-first-retry',
@@ -79,7 +79,7 @@ export default defineConfig({
   name: 'Firefox',
   use: {
     browserName: 'firefox',
-    headless: false,
+    headless: !!process.env.CI,
     viewport: null,
     navigationTimeout: 60 * 1000,
     video: 'only-on-failure',
